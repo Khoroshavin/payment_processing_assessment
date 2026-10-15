@@ -1,0 +1,46 @@
+# https://taskfile.dev/
+version: '3'
+
+vars:
+  COMPOSE: docker compose --env-file .env -f ops/docker-compose.yaml
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task -l
+
+  up:
+    desc: Build and start the full stack
+    cmds:
+      - test -f .env || cp .env.example .env
+      - '{{.COMPOSE}} up --build -d'
+
+  down:
+    desc: Stop the stack
+    cmds:
+      - '{{.COMPOSE}} down'
+
+  logs:
+    desc: Follow logs of all services
+    cmds:
+      - '{{.COMPOSE}} logs -f'
+
+  test:
+    desc: Install dependencies, run lint, typecheck and tests
+    cmds:
+      - uv sync --all-groups
+      - uv run ruff check src
+      - uv run mypy src
+      - ty check src
+      - uv run pytest
+
+  smoke:
+    desc: API smoke test against a running stack
+    cmds:
+      - ./scripts/smoke_test.sh
+
+  migrate:
+    desc: Apply migrations against the configured database
+    cmds:
+      - uv run alembic -c src/alembic.ini upgrade head

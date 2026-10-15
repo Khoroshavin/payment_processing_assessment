@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "json": {
+      "()": "app.core.logging.JsonFormatter"
+    }
+  },
+  "filters": {
+    "request_id": {
+      "()": "app.core.logging.RequestIdFilter"
+    }
+  },
+  "handlers": {
+    "default": {
+      "class": "logging.StreamHandler",
+      "stream": "ext://sys.stdout",
+      "formatter": "json",
+      "filters": [
+        "request_id"
+      ]
+    }
+  },
+  "loggers": {
+    "uvicorn": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "uvicorn.error": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "uvicorn.access": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "faststream": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "faststream.access": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "faststream.access.rabbit": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "sqlalchemy.engine": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "sqlalchemy.pool": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "alembic": { "handlers": [], "propagate": true, "level": "NOTSET" },
+    "app": { "handlers": [], "propagate": true, "level": "NOTSET" }
+  },
+  "root": {
+    "handlers": ["default"],
+    "level": "INFO"
+  }
+}
